@@ -273,7 +273,7 @@ Bangna District, Bangkok
         <div className="text-right absolute top-[100px] right-[400px]">
 <button className="text-left bg-cus-primary px-6 text-white rounded-xl py-1" onClick={downloadPDF}>Download</button>
 </div>
-<Link to={'/track'}>
+<Link to={'/checkout'}>
 <div className="text-right absolute top-[200px] right-[400px]">
 <button className="text-left bg-cus-primary px-6 text-white rounded-xl py-1">Go to Order</button>
 </div>

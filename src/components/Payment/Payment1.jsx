@@ -1,29 +1,27 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { clearCartItems } from "../../features/services/cartSlice";
 import card from "../../assets/img/vide/viber_image_2024-01-19_19-58-44-950.jpg";
 import { RxCross2 } from "react-icons/rx";
-// import Cookies from "js-cookie";
 
 const Payment1 = () => {
+  const oldCustomerName = sessionStorage.getItem("customer_name");
   const { cartItems, totalAmount, quantity } = useSelector(
     (state) => state.cart
   );
   const [isChecked, setIsChecked] = useState(false);
   const [isStatus, setIsStatus] = useState(false);
-  // const [inputValue, setInputValue] = useState("");
   const url = useSelector((state) => state.cart.url);
   const [response, setResponse] = useState("");
   const navigate = useNavigate();
   const [district, setDistrict] = useState([]);
   const [township, setTownShip] = useState([]);
-  const [postalCode,setPostalCode] = useState();
+  const [postalCode, setPostalCode] = useState();
   const [image, setImage] = useState(null);
-  const [charges,setCharges] = useState();
-
-  // console.log(image,'hee')
+  const [charges, setCharges] = useState();
+  const dispatch = useDispatch();
 
   const handleImage = (e) => {
     // console.log(e.target.files,'image')
@@ -34,15 +32,7 @@ const Payment1 = () => {
     }
   };
 
-  const discount = cartItems.length ? 873 : 0;
-  const grandTotal = cartItems.length ? totalAmount - discount : 0;
 
-  const preVAT = cartItems.length ? grandTotal / 1.07 : 0;
-
-  const vatRate = cartItems.length ? preVAT * 0.07 : 0;
-  // const remainPrice = totalAmount - formData.deposit
-  // prevAvt + vatRate  = totalAmount(grandtotal) = Amount -Discount
-  // const remainPrice = grandTotal - discount;
   const handleStatus = () => {
     const newStatusValue = !isStatus;
     setIsStatus(newStatusValue);
@@ -60,53 +50,52 @@ const Payment1 = () => {
       b2b_flag: newCheckedValue ? 1 : 0,
     }));
   };
- 
+
   const [formData, setFormData] = useState({
     customer_id: 1,
-    customer_name: "", //1
-    customer_email: "", //2
-    customer_phone: "", //3
+    customer_name: "", 
+    customer_email: "", 
+    customer_phone: "", 
     total_quantity: quantity,
     total_amount: totalAmount,
-    // delivery_fee: deliveryFee, //4
-    discount_amount: discount,
-    payment_type: "", //5
-    deliver_address: "", //6
-    // postal_code: , //7
-    b2b_flag: "", //8
-    taxId: "", //9
-    district_id: "", //10
-    township_id: "", //11
-    // remain_price: remainPrice,
-    status: "", //12
-    grand_total: grandTotal,
-    vat_rate: vatRate,
-    pre_vat: preVAT,
-    // screenshot: image, //13
-    deposit: grandTotal , //14
+    discount_amount: cartItems.length ? 873 : 0,
+    payment_type: "", 
+    deliver_address: "", 
+    b2b_flag: "", 
+    taxId: "", 
+    district_id: "", 
+    township_id: "", 
+    status: "", 
+    grand_total: cartItems.length ? totalAmount - 873 : 0,
+    vat_rate: cartItems.length ? (totalAmount - 873) / 1.07 * 0.07 : 0,
+    pre_vat: cartItems.length ? (totalAmount - 873) / 1.07 : 0,
+    // screenshot: image, 
+    deposit:  cartItems.length ? totalAmount - 873 : 0, 
   });
 
   useEffect(() => {
     getDistrict();
     getBankList();
   }, []);
+
   useEffect(() => {
     if (formData.district_id) {
       getTownship();
     }
   }, [formData.district_id]);
+
   useEffect(() => {
     if (formData.district_township_id) {
       getDeliveryCharge();
     }
   }, [formData.district_id]);
 
-
   const getBankList = async () => {
     const api = await fetch(url + `/api/bank/list`);
     const { data } = await api.json();
     console.log("banK", data);
   };
+
   const getDistrict = async () => {
     const api = await fetch(url + `/api/district/list`);
     const { data } = await api.json();
@@ -114,15 +103,15 @@ const Payment1 = () => {
     setDistrict(data);
     console.log("hi", district);
   };
+
   const getTownship = async () => {
     const api = await fetch(url + `/api/district/township/list`);
     const { data } = await api.json();
     console.log(data);
     const filteredTownship = data.filter(
-      (item)=>item.district_id == formData.district_id
-     
-    )
-    console.log("fitler",filteredTownship)
+      (item) => item.district_id == formData.district_id
+    );
+    console.log("fitler", filteredTownship);
     setTownShip(filteredTownship);
     console.log("hi", township);
   };
@@ -140,52 +129,28 @@ const Payment1 = () => {
       const postalCode = filteredData[0].postal_code;
       setCharges(fee);
       setPostalCode(postalCode);
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        postal_code: postalCode // or postal_code: postalCode if you're using postal_code instead of postalCode
-      }),() => {
-        // This callback function will run after postal_code is updated in the state
-        console.log("state", charges);
-      });
+
+      setFormData(
+        (prevFormData) => ({
+          ...prevFormData,
+          delivery_fee: fee,
+          postal_code: postalCode,
+          // or postal_code: postalCode if you're using postal_code instead of postalCode
+        }),
+        () => {
+          // This callback function will run after postal_code is updated in the state
+          console.log("state", charges);
+        }
+      );
       setCharges(fee);
     } else {
-      console.log("No data found for district_township_id:", formData.township_id);
+      console.log(
+        "No data found for district_township_id:",
+        formData.township_id
+      );
     }
-      
-    // setDeliveryFee(filteredData);
-    // console.log("hi", deliveryFee);
   };
-  // const getDeliveryCharge = async () => {
-  //   try {
-  //     const ul = url + `/api/express/charges/filter/list`; // Replace with your API endpoint
-  //     const sendData = {
-  //       expressCharges: [getCharge.district_id, getCharge.express_id],
-  //       // Other fields in your request body if needed
-  //     };
 
-  //     const response = await axios.post(ul, sendData);
-
-  //     console.log("POST request successful");
-  //     const { data } = response.data;
-  //     const fees = data?.map((f) => f.charges);
-
-  //     if (fees && fees.length > 0) {
-  //       // Assuming you want to use the first fee in the array
-  //       const selectedFee = fees[0];
-
-  //       // Update formData state with the retrieved delivery fee
-  //       setDeliveryFee(selectedFee);
-  //       // setFormData((prevFormData) => ({
-  //       //   ...prevFormData,
-  //       //   delivery_fee: selectedFee,
-  //       // }));
-  //     }
-  //     // Do something with the response
-  //   } catch (error) {
-  //     console.error("Error making POST request:", error);
-  //     // Handle errors
-  //   }
-  // };
   const sendDataToBackend = async () => {
     const response = await axios.post(
       url + `/api/ecommerce/order/store`,
@@ -195,21 +160,25 @@ const Payment1 = () => {
     // Check if the request was successful
     if (response.status === 200) {
       setResponse(response.data.message);
-      Cookies.remove("cartItems");
-
+      console.log("order store is success");
+     
+      dispatch(clearCartItems());
+      setTimeout(() => {
+         alert("order store is Success")
+        navigate("/track");
+      }, 1000); // 5000 milliseconds = 5 seconds
+    
       // Assuming the backend sends a JSON response with a "message" field
     } else {
-      console.error("Failed to send data to the backend");
+      console.error("Failed to send order Store");
     }
   };
 
   const handleInputChange = (e) => {
     const depositValue = parseFloat(e.target.value || 0); // Convert deposit value to a number
-    const remainPrice = grandTotal - depositValue;
     setFormData((prevFormData) => ({
       ...prevFormData,
       deposit: depositValue,
-      remain_price: remainPrice,
     }));
     var paymentType = document.getElementsByName("payment_type")[0].value;
 
@@ -257,11 +226,10 @@ const Payment1 = () => {
     const selectedDistrictId = event.target.value;
     setFormData({
       ...formData,
-      district_id : selectedDistrictId
-    })
+      district_id: selectedDistrictId,
+    });
     // getTownship()
-
-  }
+  };
   const handleSelectChange = (event) => {
     const selectedTownshipId = event.target.value;
     setFormData({
@@ -271,26 +239,13 @@ const Payment1 = () => {
     getDeliveryCharge();
 
     console.log("id", formData.express_id);
-    // const { name, value } = e.target;
-    // console.log(e.target.name);
-    // setGetCharge({
-    //   ...getCharge,
-    //   [name]: value,
-    // });
-    // setFormData((prevFormData) => ({
-    //   ...prevFormData,
-    //   [name]: value,
-    // }));
-    // getDeliveryCharge();
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const remainPrice = grandTotal - formData.deposit; // Calculate remain price
-  setFormData((prevFormData) => ({
-    ...prevFormData,
-    remain_price: remainPrice, // Update remain_price in formData
-  }));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+    }));
 
     sendDataToBackend(formData);
     console.log(formData);
@@ -298,8 +253,7 @@ const Payment1 = () => {
     sessionStorage.setItem("customer_name", formData.customer_name);
     sessionStorage.setItem("customer_phone", formData.customer_phone);
     sessionStorage.setItem("deli_address", formData.deliver_address);
-    sessionStorage.setItem("taxId",formData.taxId)
-    navigate("/checkout/3");
+    sessionStorage.setItem("taxId", formData.taxId);
   };
 
   return (
@@ -307,7 +261,7 @@ const Payment1 = () => {
       <h1 className="text-cus-primary text-center text-[30px] lg:ml-[100px] font-bold">
         Make Payment
       </h1>
-
+     
       <form
         encType="multipart/form-data"
         className=" flex flex-wrap justify-center items-center sm:mx-[100px]  md:mx-[210px] mx-[20px]  max-w-lg ml-5 lg:ml-[300px] xl:ml-[400px] 2xl:ml-[520px] mt-11"
@@ -330,7 +284,7 @@ const Payment1 = () => {
             </p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-          <label className="text-cus-primary font-bold">Phone</label>
+            <label className="text-cus-primary font-bold">Phone</label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-last-name"
@@ -345,7 +299,7 @@ const Payment1 = () => {
         </div>
         <div className="flex flex-wrap -mx-3 mb-2">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="text-cus-primary font-bold">Email</label>
+            <label className="text-cus-primary font-bold">Email</label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-password"
@@ -402,7 +356,7 @@ const Payment1 = () => {
               value={formData.express_id}
               required
             >
-               <option value="">Select Township</option>{" "}
+              <option value="">Select Township</option>{" "}
               {/* Optional default option */}
               {township?.map((e) => (
                 <option
@@ -419,7 +373,9 @@ const Payment1 = () => {
 
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label className="text-cus-primary font-bold">Delivery-Address</label>
+            <label className="text-cus-primary font-bold">
+              Delivery-Address
+            </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-first-name"
@@ -434,7 +390,7 @@ const Payment1 = () => {
             </p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-          <label className="text-cus-primary font-bold">Postal Code</label>
+            <label className="text-cus-primary font-bold">Postal Code</label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700  border border-red-500  rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-last-name"
@@ -542,7 +498,7 @@ const Payment1 = () => {
           </div>
         </div>
         <div id="bankTransferModal" className="modal mt-5 hidden">
-          <div className="modal-content shadow-2xl w-[400px] rounded-2xl p-5 border-2 border-blue-500">
+          <div className="modal-content shadow-2xl w-[350px] lg:w-[400px] rounded-2xl p-5 border-2 border-blue-500">
             <div className="flex justify-between items-start">
               <h1 className="text-cus-primary font-bold text-[18px]">
                 Bank Information
@@ -565,7 +521,7 @@ const Payment1 = () => {
                 </span>
               </span>
             </div>
-            <div className="w-[380px]">
+            <div className="lg:w-[380px]">
               <span className="text-cus-primary font-bold text-[18px] ">
                 Card Holder
                 <span className=" ml-5 text-[14px] text-black font-bold">
@@ -581,29 +537,31 @@ const Payment1 = () => {
                 </span>
               </span>
             </div>
-            <div className="flex justify-between items-start mt-5">
+            {/* <div className="flex justify-between items-start mt-5">
               <button
                 className="bg-cus-primary text-white px-4 rounded-xl"
                 onClick={closeModal}
               >
                 Done
               </button>
-              {/* <button
-                className="bg-red-500 text-white px-4  rounded-xl"
-                onClick={closeModal}
-              >
-                Decline
-              </button> */}
-            </div>
+           
+            </div> */}
           </div>
         </div>
 
         <div className="text-center mt-11 ">
           <button className="bg-cus-primary hover:bg-cyan-700 px-[160px] text-white font-bold py-2  rounded">
-            Go to Payment
+            Order
           </button>
         </div>
       </form>
+      <NavLink to="/checkout/3">
+        <div className="text-center mt-11 ml-5">
+          <button className=" bg-cus-primary hover:bg-cyan-700 px-[100px] text-white font-bold py-2 inline rounded">
+            <span>Confirm Order</span>
+          </button>
+        </div>
+      </NavLink>
     </div>
   );
 };
