@@ -7,7 +7,37 @@ import card from "../../assets/img/vide/viber_image_2024-01-19_19-58-44-950.jpg"
 import { RxCross2 } from "react-icons/rx";
 
 const Payment1 = () => {
-  const oldCustomerName = sessionStorage.getItem("customer_name");
+  const keys = [
+    "customer_name",
+    "customer_phone",
+    "customer_email",
+    "deli_address",
+    "district_id",
+    "township_id",
+    "status",
+    "b2b",
+    "taxId",
+    "payment",
+
+
+  ];
+  const oldCustomerData = {};
+  keys.forEach((key) => {
+    oldCustomerData[key] = sessionStorage.getItem(key);
+  });
+  const {
+    customer_name: oldCustomerName,
+    customer_phone: oldCustomerPhone,
+    customer_email: oldCustomerEmail,
+    deli_address: oldDeli,
+    district_id : oldDistrict,
+    township_id : oldTownship,
+    status : oldStatus,
+    b2b : oldB2b,
+    taxId : oldTaxId,
+    payment : oldPayment,
+  } = oldCustomerData;
+
   const { cartItems, totalAmount, quantity } = useSelector(
     (state) => state.cart
   );
@@ -32,7 +62,6 @@ const Payment1 = () => {
     }
   };
 
-
   const handleStatus = () => {
     const newStatusValue = !isStatus;
     setIsStatus(newStatusValue);
@@ -40,6 +69,7 @@ const Payment1 = () => {
       ...prevFormData,
       status: newStatusValue ? 1 : 0,
     }));
+    sessionStorage.setItem('status',formData.status)
   };
   const handleCheckboxChange = () => {
     const newCheckedValue = !isChecked;
@@ -49,28 +79,29 @@ const Payment1 = () => {
       ...prevFormData,
       b2b_flag: newCheckedValue ? 1 : 0,
     }));
+    sessionStorage.setItem('b2b',formData.b2b_flag)
   };
 
   const [formData, setFormData] = useState({
     customer_id: 1,
-    customer_name: "", 
-    customer_email: "", 
-    customer_phone: "", 
+    customer_name: oldCustomerName || "",
+    customer_email: oldCustomerEmail || "",
+    customer_phone: oldCustomerPhone || "",
     total_quantity: quantity,
     total_amount: totalAmount,
     discount_amount: cartItems.length ? 873 : 0,
-    payment_type: "", 
-    deliver_address: "", 
-    b2b_flag: "", 
-    taxId: "", 
-    district_id: "", 
-    township_id: "", 
-    status: "", 
+    payment_type: oldPayment || "",
+    deliver_address: oldDeli || "",
+    b2b_flag: oldB2b || "",
+    taxId: oldTaxId || "",
+    district_id: oldDistrict || "",
+    township_id: oldTownship || "",
+    status: oldStatus || "",
     grand_total: cartItems.length ? totalAmount - 873 : 0,
-    vat_rate: cartItems.length ? (totalAmount - 873) / 1.07 * 0.07 : 0,
+    vat_rate: cartItems.length ? ((totalAmount - 873) / 1.07) * 0.07 : 0,
     pre_vat: cartItems.length ? (totalAmount - 873) / 1.07 : 0,
-    // screenshot: image, 
-    deposit:  cartItems.length ? totalAmount - 873 : 0, 
+    // screenshot: image,
+    deposit: cartItems.length ? totalAmount - 873 : 0,
   });
 
   useEffect(() => {
@@ -161,13 +192,16 @@ const Payment1 = () => {
     if (response.status === 200) {
       setResponse(response.data.message);
       console.log("order store is success");
-     
+
       dispatch(clearCartItems());
       setTimeout(() => {
-         alert("order store is Success")
+        alert("order store is Success");
         navigate("/track");
       }, 1000); // 5000 milliseconds = 5 seconds
-    
+      const keysToRemove = ["customer_name", "customer_phone","deli_address","customer_email","district_id","township_id","payment","taxId"];
+
+      keysToRemove.forEach((key) => sessionStorage.removeItem(key));
+
       // Assuming the backend sends a JSON response with a "message" field
     } else {
       console.error("Failed to send order Store");
@@ -180,6 +214,12 @@ const Payment1 = () => {
       ...prevFormData,
       deposit: depositValue,
     }));
+    sessionStorage.setItem("customer_name", formData.customer_name);
+    sessionStorage.setItem("customer_phone", formData.customer_phone);
+    sessionStorage.setItem("deli_address", formData.deliver_address);
+    sessionStorage.setItem("taxId", formData.taxId);
+    sessionStorage.setItem("payment",formData.payment_type)
+
     var paymentType = document.getElementsByName("payment_type")[0].value;
 
     if (paymentType === "Bank_Transfer") {
@@ -228,7 +268,7 @@ const Payment1 = () => {
       ...formData,
       district_id: selectedDistrictId,
     });
-    // getTownship()
+    sessionStorage.setItem("district_id", formData.district_id);
   };
   const handleSelectChange = (event) => {
     const selectedTownshipId = event.target.value;
@@ -237,7 +277,7 @@ const Payment1 = () => {
       township_id: selectedTownshipId,
     });
     getDeliveryCharge();
-
+    sessionStorage.setItem("township_id", formData.township_id);
     console.log("id", formData.express_id);
   };
 
@@ -249,11 +289,6 @@ const Payment1 = () => {
 
     sendDataToBackend(formData);
     console.log(formData);
-    sessionStorage.setItem("deposit", formData.deposit);
-    sessionStorage.setItem("customer_name", formData.customer_name);
-    sessionStorage.setItem("customer_phone", formData.customer_phone);
-    sessionStorage.setItem("deli_address", formData.deliver_address);
-    sessionStorage.setItem("taxId", formData.taxId);
   };
 
   return (
@@ -261,7 +296,7 @@ const Payment1 = () => {
       <h1 className="text-cus-primary text-center text-[30px] lg:ml-[100px] font-bold">
         Make Payment
       </h1>
-     
+
       <form
         encType="multipart/form-data"
         className=" flex flex-wrap justify-center items-center sm:mx-[100px]  md:mx-[210px] mx-[20px]  max-w-lg ml-5 lg:ml-[300px] xl:ml-[400px] 2xl:ml-[520px] mt-11"
@@ -353,7 +388,7 @@ const Payment1 = () => {
               name="express_id"
               className="font-bold text-cus-primary rounded-lg w-[187px] border border-blue-900"
               onChange={handleSelectChange}
-              value={formData.express_id}
+              value={formData.township_id}
               required
             >
               <option value="">Select Township</option>{" "}
