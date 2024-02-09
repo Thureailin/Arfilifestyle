@@ -642,6 +642,8 @@ const WomenShopdetail = () => {
   const [prosize,setProsize] = useState([]);
   const [filterItem,setFilterItem] = useState();
   const [notColor,setNotColor] =useState(null)
+  const [activeSize, setActiveSize] = useState(null);
+
   let [bigImage,setBigImage] = useState(null)
   const URL = useSelector((state) => state.cart.url);
   const params = useParams();
@@ -698,7 +700,7 @@ const WomenShopdetail = () => {
     });
   }
   const getProductWithSize= async(sizeid) =>{
-   
+    setActiveSize(sizeid);
     const url = URL +'/api/countingunit/list/filter/website'; 
     let data ;
     if(filterItem == null){
@@ -980,6 +982,10 @@ const WomenShopdetail = () => {
                 <button
                   onClick={() => getProductWithSize(size.id)}
                   className="bg-white hover:bg-cus-primary text-black border rounded-md border-black py-1 uppercase font-bold px-4 mt-2 mr-1 "
+                  style={{
+                    backgroundColor: activeSize === size.id ? '#723e97' : 'white',
+                    color:activeSize === size.id ? 'white' : 'black' // Change background color if active
+                  }}
                 >
                   {size.size_name}
                 </button>

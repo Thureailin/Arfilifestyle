@@ -87,7 +87,7 @@ Bangna District, Bangkok
                   
                 </tbody>
               </table>
-              <table className="table-auto border ml-[298px]">
+              <table className="table-auto border ml-[321px]">
                 <tbody className="border border-black">
                   <tr >
                     <td className="p-4 w-40 border border-black border-t-white font-bold text-center">Sub Total</td>
@@ -97,22 +97,23 @@ Bangna District, Bangkok
                     <td className="p-4 w-40 border border-black border-t-white font-bold text-center">Discount</td>
                     <td className="p-4 border border-black border-t-white w-40 text-center font-bold">873</td>
                   </tr>
-                  <tr >
-                    <td className="p-4 w-40 border border-black border-t-white font-bold text-center ">GrandTotal</td>
-                    <td className="p-4 border border-black border-t-white w-40 text-center font-bold">{grandTotal}</td>
-                  </tr>
+                 
                   <tr >
                     <td className="p-4 w-40 border border-black border-t-white font-bold text-center">VAT rate(7%)</td>
                     <td className="p-4 border border-black border-t-white w-40 text-center font-bold">{vatRate.toFixed(2)}</td>
                   </tr>
-                 <tr>
+                 {/* <tr>
                     <td className="p-4 w-40 border border-black border-t-white font-bold text-center">Deposit</td>
                     <td className="p-4 border border-black border-t-white w-40 text-center font-bold">{deposit}</td>
                   </tr>
-                 
+                  */}
                   <tr >
                     <td className="p-4 w-40 border border-black border-t-white font-bold text-center">Pre VAT</td>
                     <td className="p-4 border border-black border-t-white w-40 text-center font-bold">{preVAT.toFixed(2)}</td>
+                  </tr>
+                  <tr >
+                    <td className="p-4 w-40 border border-black border-t-white font-bold text-center ">GrandTotal</td>
+                    <td className="p-4 border border-black border-t-white w-40 text-center font-bold">{grandTotal}</td>
                   </tr>
                 </tbody>
               </table>

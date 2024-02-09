@@ -10,6 +10,7 @@ const TextTruncate = ({ text, maxLength }) => {
   return (
     <div className=''>
       {isTruncated ? (
+        
         <p>{text.substring(0, maxLength)}  ............</p>
       ) : (
         <p>{text}</p>

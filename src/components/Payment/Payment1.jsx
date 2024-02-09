@@ -515,13 +515,7 @@ const Payment1 = () => {
               onClick={handleInputChange}
               required
             >
-              <option
-                value="Credit/Debit"
-                className="w-full font-semibold"
-                required
-              >
-                COD
-              </option>
+              
               <option
                 value="Bank_Transfer"
                 className="w-full font-semibold"

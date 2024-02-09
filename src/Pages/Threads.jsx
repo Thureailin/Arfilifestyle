@@ -74,7 +74,9 @@ const Threads = () => {
         </div>
         </div>
       <div className="mt-5 container text-cus-primary font-semibold text-left lg:text-center w-[300px] lg:w-[1000px]">
-        <TextTruncate text={longText} maxLength={maxLength}/>
+        {/* <TextTruncate text={longText} maxLength={maxLength}/> */}
+        <div></div>
+        <div dangerouslySetInnerHTML={{__html: article.description}} />
       </div>
      
           </div>
