@@ -201,7 +201,7 @@ const Payment1 = () => {
       const keysToRemove = ["customer_name", "customer_phone","deli_address","customer_email","district_id","township_id","payment","taxId"];
 
       keysToRemove.forEach((key) => sessionStorage.removeItem(key));
-//hello
+
       // Assuming the backend sends a JSON response with a "message" field
     } else {
       console.error("Failed to send order Store");
