@@ -451,6 +451,7 @@ const Cart = () => {
         <div className="overflow-x-scroll">
           <Table className="w-[700px] lg:w-[1000px] xl:w-[1290px] sm:w-[600px] sm:ml-[20px]  2xl:w-[1300px]   ">
             <Table.Head className="uppercase  font-bold text-[15px]">
+              <Table.HeadCell>No</Table.HeadCell>
               <Table.HeadCell>Product</Table.HeadCell>
               <Table.HeadCell className="">Unit Price</Table.HeadCell>
               <Table.HeadCell className="">Size</Table.HeadCell>
@@ -461,7 +462,7 @@ const Cart = () => {
               <Table.HeadCell>Cancel</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y ">
-              {cartItems?.map((cart) => {
+              {cartItems?.map((cart,index) => {
                 // let originalPrice = cart.selling_price
                 // let vatRate = 0.07;
 
@@ -473,6 +474,7 @@ const Cart = () => {
                 // window.location.reload()
                 //  }
                 const oneItemPrice = cart.selling_price * cart.quantity;
+                const loopValue = index + 1;
 
                 //  if(cart.quantity <= 1 ) {
                 //   alert("cart is 0")
@@ -486,6 +488,7 @@ const Cart = () => {
                 return (
                   <>
                     <Table.Row className="bg-white dark:border-gray-700 font-bold dark:bg-gray-800">
+                      <Table.Cell>{loopValue}</Table.Cell>
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900  dark:text-white">
                         <div className="flex  items-center text-[15px]">
                           <img
@@ -569,35 +572,35 @@ const Cart = () => {
               <div className="w-[100px] ">SubTotal</div>
 
               <div className="font-bold text-black">
-                {/* {isNaN(totalAmount) ? window.location.reload() : totalAmount} */}
-                {isNaN(totalAmount) ? handleReloadPage() : totalAmount}
+                {isNaN(totalAmount) ? window.location.reload() : totalAmount}
+               <span className="mx-2">baht</span>
 
               </div>
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">Discount</div>
 
-              <div className="text-black font-bold">{discount}</div>
+              <div className="text-black font-bold">{discount}<span className="mx-2">baht</span></div>
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">Grand Total</div>
 
-              <div className="text-black font-bold">{grandTotal}</div>
+              <div className="text-black font-bold">{grandTotal}<span className="mx-2">baht</span></div>
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">VAT rate(7%)</div>
 
-              <div className="text-black font-bold">{vatRate.toFixed(2)}</div>
+              <div className="text-black font-bold">{vatRate.toFixed(2)}<span className="mx-2">baht</span></div>
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">Pre VAT</div>
 
-              <div className="text-black font-bold">{preVAT.toFixed(2)}</div>
+              <div className="text-black font-bold">{preVAT.toFixed(2)}<span className="mx-2">baht</span></div>
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">Total</div>
 
-              <div className="text-black font-bold">{grandTotal}</div>
+              <div className="text-black font-bold">{grandTotal}<span className="mx-2">baht</span></div>
             </div>
           </div>
           {/* <div className="lg:mx-[120px] mx-[50px] mt-11">

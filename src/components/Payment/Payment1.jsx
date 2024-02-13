@@ -136,49 +136,45 @@ const Payment1 = () => {
   };
 
   const getTownship = async () => {
-    const api = await fetch(url + `/api/district/township/list`);
-    const { data } = await api.json();
-    console.log(data);
-    const filteredTownship = data.filter(
-      (item) => item.district_id == formData.district_id
-    );
-    console.log("fitler", filteredTownship);
-    setTownShip(filteredTownship);
-    console.log("hi", township);
+    try {
+      const api = await fetch(url + `/api/district/township/list`);
+      const { data } = await api.json();
+      console.log("Township", data);
+      const filteredTownship = data.filter(
+        (item) => item.district_id == formData.district_id
+      );
+      console.log("Filtered Township", filteredTownship);
+      setTownShip(filteredTownship);
+    } catch (error) {
+      console.error("Error fetching township list:", error);
+    }
   };
 
   const getDeliveryCharge = async () => {
-    const api = await fetch(url + `/api/township/postal/charges/list`);
-    const { data } = await api.json();
-    console.log(data);
-    const filteredData = data.filter(
-      (item) => item.district_township_id == formData.township_id
-    );
-    if (filteredData.length > 0) {
-      // Retrieve the charges value from the first matching object (assuming there's only one)
-      const fee = filteredData[0].charges;
-      const postalCode = filteredData[0].postal_code;
-      setCharges(fee);
-      setPostalCode(postalCode);
-
-      setFormData(
-        (prevFormData) => ({
+    try {
+      const api = await fetch(url + `/api/township/postal/charges/list`);
+      const { data } = await api.json();
+      console.log("Delivery Charge Data", data);
+      const filteredData = data.filter(
+        (item) => item.district_township_id == formData.township_id
+      );
+      if (filteredData.length > 0) {
+        const fee = filteredData[0].charges;
+        const postalCode = filteredData[0].postal_code;
+        console.log("Delivery Fee:", fee);
+        console.log("Postal Code:", postalCode);
+        setCharges(fee);
+        setPostalCode(postalCode);
+        setFormData((prevFormData) => ({
           ...prevFormData,
           delivery_fee: fee,
           postal_code: postalCode,
-          // or postal_code: postalCode if you're using postal_code instead of postalCode
-        }),
-        () => {
-          // This callback function will run after postal_code is updated in the state
-          console.log("state", charges);
-        }
-      );
-      setCharges(fee);
-    } else {
-      console.log(
-        "No data found for district_township_id:",
-        formData.township_id
-      );
+        }));
+      } else {
+        console.log("No data found for district_township_id:", formData.township_id);
+      }
+    } catch (error) {
+      console.error("Error fetching delivery charges:", error);
     }
   };
 

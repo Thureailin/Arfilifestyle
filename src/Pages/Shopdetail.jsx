@@ -313,6 +313,7 @@
 // };
 
 // export default Shopdetail;
+
 import axios from 'axios';
 import { addToCart } from "../features/services/cartSlice";
 import React, { useEffect, useState } from 'react'
@@ -326,12 +327,15 @@ const Shopdetail = () => {
   const [filterItem,setFilterItem] = useState();
   const [notColor,setNotColor] =useState(null)
   const [activeSize, setActiveSize] = useState(null);
+  const [colorId,setColorId] = useState(null);
   let [bigImage,setBigImage] = useState(null)
   const URL = useSelector((state) => state.cart.url);
   const params = useParams();
   const dispatch = useDispatch();
  
   const getItem = async (id) => {
+    setColorId(id)
+
     try {
       const api = await fetch(URL + '/api/item/lists');
       const { data } = await api.json();
@@ -612,7 +616,7 @@ const Shopdetail = () => {
             <span className="text-[18px] ">Stock | </span>
             {/* {fico.length != 0 ? */}
             {/* <span>{fico[0].current_quantity}</span> :  */}
-            <span>{prosize[0].current_quantity }</span>
+            {prosize[0].current_quantity == 0 ? <span className='text-[18px] text-red-500'>0 /Out of Stock</span> : prosize[0].current_quantity}
             {/* } */}
              {/* {fico[0].current_quantity}
              {(fi.current_quantity === null || fi.selling_price === undefined) ? 0 : fi.current_quantity} */}
@@ -642,8 +646,11 @@ const Shopdetail = () => {
            <span className="text-[18px] ">Stock | </span>
            {/* {fico.length != 0 ? */}
            {/* <span>{fico[0].current_quantity}</span> :  */}
-           <span>{product[0].current_quantity }</span>
-           {/* } */}
+           
+  <span className='text-black'>
+    {product[0].current_quantity == 0 ? <span className='text-[18px] text-red-500'>0 /Out of Stock</span> : product[0].current_quantity}
+  </span>
+       {/* } */}
             {/* {fico[0].current_quantity}
             {(fi.current_quantity === null || fi.selling_price === undefined) ? 0 : fi.current_quantity} */}
          </span>
@@ -676,25 +683,27 @@ const Shopdetail = () => {
           );
         })}
       </div>
+      {colorId && <p className='text-cus-primary text-xl'>If you want to get another color <span className='text-red-500 font-bold'>"choose size"</span></p>}
       <div className="mt-8 ">
         <p className="uppercase font-bold mb-1">Color</p>
+      
         <div className="flex">
-
+       
           {color && color.length != 0 ? 
              color.map(co => <>
              {console.log("color is ",co.id)}
              <p
                     key={co.colour_code}
                    
-                    style={{
-                      backgroundColor: co.colour_code,
-                      width: 20,
-                      height: 20,
-                      borderRadius: "50%",
-                      border: 10,
-                      marginLeft: 6,
-                      cursor: "pointer",
-                    }}
+                   style={{
+              backgroundColor: co.colour_code,
+              width: `${colorId === co.id ? '25px' : '20px'}`,
+              height: ` ${colorId === co.id ? '25px' : '20px' }`,
+              borderRadius: "50%",
+              border: `3px solid ${colorId === co.id ? 'black ' : 'transparent'}`, // Change border color based on selection
+              marginLeft:'5px',
+              cursor: "pointer",
+            }}
                     onClick={() => getItem(co.id)
                     }
                   ></p>
@@ -709,7 +718,7 @@ const Shopdetail = () => {
           </p>
         </div>
         <div className="mt-11">
-          <button
+          {/* <button
             className="uppercase bg-cus-primary font-bold py-2 text-white rounded-sm w-[200px]"
             onClick={() => {
               const prosizeWithQuantity = {
@@ -719,7 +728,21 @@ const Shopdetail = () => {
               dispatch(addToCart(prosizeWithQuantity));
             }}          >
             Add to Bag
-          </button>
+          </button> */}
+         <button
+  className="uppercase bg-cus-primary font-bold py-2 text-white rounded-sm w-[200px]"
+  onClick={() => {
+    if (prosize  && prosize[0].current_quantity !== "Out of Stock" && parseInt(prosize[0].current_quantity) > 0) {
+      const prosizeWithQuantity = {
+        ...prosize[0],
+        quantity: 1
+      };
+      dispatch(addToCart(prosizeWithQuantity));
+    }
+  }}
+>
+  Add to Bag
+</button>
         </div>
       </div>
     </div>
