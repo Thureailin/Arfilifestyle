@@ -73,8 +73,8 @@ const Threads = () => {
           <p className="font-bold ">{newDateFormat}</p>
         </div>
         </div>
-      <div className="mt-5 container text-cus-primary font-semibold text-left lg:text-center w-[300px] lg:w-[1000px]">
-        {/* <TextTruncate text={longText} maxLength={maxLength}/> */}
+      <div className="mt-11 lg:mx-[40px] 2xl:mx-[180px]  xl:mx-[300px] text-cus-primary font-semibold text-left lg:text-left w-[300px] 2xl:w-[1200px] md:w-[800px] xl:w-[800px] lg:w-[900px]">
+        {/* <TextTruncate text={longText}xl maxLength={maxLength}/> */}
         <div></div>
         <div dangerouslySetInnerHTML={{__html: article.description}} />
       </div>
