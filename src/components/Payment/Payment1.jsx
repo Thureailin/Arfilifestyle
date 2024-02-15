@@ -89,7 +89,7 @@ const Payment1 = () => {
     customer_phone: oldCustomerPhone || "",
     total_quantity: quantity,
     total_amount: totalAmount,
-    discount_amount: cartItems.length ? 873 : 0,
+    discount_amount: "",
     payment_type: oldPayment || "",
     deliver_address: oldDeli || "",
     b2b_flag: oldB2b || "",
@@ -97,11 +97,11 @@ const Payment1 = () => {
     district_id: oldDistrict || "",
     township_id: oldTownship || "",
     status: oldStatus || "",
-    grand_total: cartItems.length ? totalAmount - 873 : 0,
-    vat_rate: cartItems.length ? ((totalAmount - 873) / 1.07) * 0.07 : 0,
-    pre_vat: cartItems.length ? (totalAmount - 873) / 1.07 : 0,
+    grand_total: cartItems.length ? totalAmount  : 0,
+    vat_rate: cartItems.length ? ((totalAmount ) / 1.07) * 0.07 : 0,
+    pre_vat: cartItems.length ? (totalAmount) / 1.07 : 0,
     // screenshot: image,
-    deposit: cartItems.length ? totalAmount - 873 : 0,
+    deposit: cartItems.length ? totalAmount  : 0,
   });
 
   useEffect(() => {

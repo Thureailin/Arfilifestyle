@@ -323,7 +323,7 @@ const Cart = () => {
     productList();
   }, []);
   const discount = cartItems.length ? 873 : 0;
-  const grandTotal = cartItems.length ? totalAmount - discount : 0;
+  const grandTotal = cartItems.length ? totalAmount  : 0;
 
   const preVAT = cartItems.length ? grandTotal / 1.07 : 0;
 
@@ -473,7 +473,7 @@ const Cart = () => {
 
                 // window.location.reload()
                 //  }
-                const oneItemPrice = cart.selling_price * cart.quantity;
+                const oneItemPrice = (cart.selling_price - cart.discount) * cart.quantity;
                 const loopValue = index + 1;
 
                 //  if(cart.quantity <= 1 ) {
@@ -501,7 +501,7 @@ const Cart = () => {
                           </p>
                         </div>
                       </Table.Cell>
-                      <Table.Cell>{cart.selling_price}</Table.Cell>
+                      <Table.Cell>{cart.selling_price - cart.discount}</Table.Cell>
                       <Table.Cell>{cart.size_name}</Table.Cell>
                       <Table.Cell>{cart.subcategory_name}</Table.Cell>
                       <Table.Cell>
@@ -578,9 +578,9 @@ const Cart = () => {
               </div>
             </div>
             <div className="flex justify-around items-center">
-              <div className="w-[100px]">Discount</div>
+              {/* <div className="w-[100px]">Discount</div>
 
-              <div className="text-black font-bold">{discount}<span className="mx-2">baht</span></div>
+              <div className="text-black font-bold">{discount}<span className="mx-2">baht</span></div> */}
             </div>
             <div className="flex justify-around items-center">
               <div className="w-[100px]">Grand Total</div>

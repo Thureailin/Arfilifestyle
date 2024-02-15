@@ -15,8 +15,8 @@ const Payment3 = () => {
     (state) => state.cart
   );
 
-  const discount = 873;
-  const grandTotal = totalAmount - discount;
+  // const discount = 873;
+  const grandTotal = totalAmount ;
   const preVAT = grandTotal / 1.07;
 
   const vatRate = preVAT * 0.07;
@@ -80,7 +80,7 @@ const Payment3 = () => {
             </thead>
             <tbody className="border border-black">
               {cartItems?.map((cart, index) => {
-                const oneItemPrice = cart.selling_price * cart.quantity;
+                const oneItemPrice = (cart.selling_price - cart.discount) * cart.quantity;
                 const loopValue = index + 1;
 
                 return (
@@ -93,7 +93,7 @@ const Payment3 = () => {
                         {cart.item_name}
                       </td>
                       <td className="p-2 py-4 border border-black font-bold text-center">
-                        {cart.selling_price}
+                        {cart.selling_price - cart.discount}
                       </td>
                       <td className="p-2 py-4 border border-black font-bold text-center">
                         {cart.size_name}
@@ -113,7 +113,7 @@ const Payment3 = () => {
               })}
             </tbody>
           </table>
-          <table className="table-auto border ml-[348px]">
+          <table className="table-auto border ml-[373px]">
             <tbody className="border border-black">
               <tr>
                 <td className="p-4 w-40 border border-black border-t-white font-bold text-center">
@@ -123,14 +123,14 @@ const Payment3 = () => {
                   {totalAmount}<span className="mx-2">baht</span>
                 </td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="p-4 w-40 border border-black border-t-white font-bold text-center">
                   Discount
                 </td>
                 <td className="p-4 border border-black border-t-white w-40 text-center font-bold">
                   873<span className="mx-2">baht</span>
                 </td>
-              </tr>
+              </tr> */}
 
               <tr>
                 <td className="p-4 w-40 border border-black border-t-white font-bold text-center">

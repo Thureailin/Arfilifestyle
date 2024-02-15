@@ -950,22 +950,27 @@ const WomenShopdetail = () => {
                       <span className="text-[18px] text-black font-bold">
                         Baht |{" "}
                       </span>
-                      {prosize[0].selling_price}
+                      {prosize[0].selling_price - prosize[0].discount}
                     </span>
                   </p>
+                  <p className="mt-3  font-light text-black text-[10px]">
+         <span className="text-[18px]  font-light">
+           <span className="text-[18px] text-black font-light line-through">baht  {product[0].selling_price}  </span>
+          <span className='mx-1'>-</span> <span className='font-bold text-[15px]'>{product[0].discount }</span>  baht (discount)
+         </span>
+         
+       </p>
                 </div>
                 <div className="">
                   <p className="mt-5  font-semibold text-black text-[10px]">
                     <span className="text-[20px]  font-bold">
                       <span className="text-[18px] ">Stock | </span>
-                      {/* {fico.length != 0 ? */}
-                      {/* <span>{fico[0].current_quantity}</span> :  */}
+                     
                       {prosize[0].current_quantity == 0 ? <span className='text-[18px] text-red-500'>0 /Out of Stock</span> : prosize[0].current_quantity}
-                      {/* } */}
-                      {/* {fico[0].current_quantity}
-             {(fi.current_quantity === null || fi.selling_price === undefined) ? 0 : fi.current_quantity} */}
+                    
                     </span>
                   </p>
+                 
                 </div>
               </div>
             </>
@@ -981,9 +986,16 @@ const WomenShopdetail = () => {
                       <span className="text-[18px] text-black font-bold">
                         Baht |{" "}
                       </span>
-                      {product[0].selling_price}
+                      {product[0].selling_price - product[0].discount}
                     </span>
                   </p>
+                  <p className="mt-3  font-light text-black text-[10px]">
+         <span className="text-[18px]  font-light">
+           <span className="text-[18px] text-black font-light line-through">baht  {product[0].selling_price}  </span>
+          <span className='mx-1'>-</span> <span className='font-bold text-[15px]'>{product[0].discount }</span>   baht (discount)
+         </span>
+         
+       </p>
                 </div>
                 <div className="">
                   <p className="mt-5  font-semibold text-black text-[10px]">

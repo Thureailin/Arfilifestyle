@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 // import { Tab } from "@mui/material";
 
 
-const OrderList = () => { 
+const   OrderList = () => { 
   // const path = `http://ecommerceapp.arfilifestyle.com/ecommerce/items/`;
 
   const params = useParams();
@@ -152,7 +152,7 @@ const OrderList = () => {
     </Table.Cell>
   <Table.Cell>{i.unit_name}</Table.Cell>
   <Table.Cell>{i.size}</Table.Cell>
-<Table.Cell >{i.price}</Table.Cell>
+<Table.Cell >{i.price - i.discount_price }</Table.Cell>
   <Table.Cell>
   <div className='flex flex-col items-center'>
 <p  className='text-secondary cursor-pointer'>
@@ -161,7 +161,7 @@ const OrderList = () => {
 
 </div>
   </Table.Cell>
-  <Table.Cell>{i.item_total_price}</Table.Cell>
+  <Table.Cell>{i.item_total_price -( i.quantity * i.discount_price )}</Table.Cell>
 
 </Table.Row> 
 </>

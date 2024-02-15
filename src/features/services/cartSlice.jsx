@@ -104,6 +104,7 @@ const initialState = {
   totalAmount: 0,
   quantity: 0,
   url: "https://ecommerceapp.arfilifestyle.com",
+  // url: "http://192.168.1.40:8800"
 };
 
 const STORAGE_KEY = "cartItems";
@@ -118,7 +119,7 @@ if (storedItems) {
 
 function calculateAmount(cartItems) {
   return cartItems.reduce(
-    (total, item) => total + item.selling_price * item.quantity,
+    (total, item) => total + (item.selling_price - item.discount) * item.quantity,
     0
   );
   //cart.selling_price * cart.quantity
@@ -132,22 +133,40 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    // addToCart: (state, { payload }) => {
+    //   console.log(payload);
+    //   // const isExisted = state.cartItems.find(item=>item.id=== payload.id)
+    //   // if(isExisted){
+    //   //     return state;
+    //   // }else{
+    //   state.cartItems = [...state.cartItems, { ...payload }];
+    //   // }
+    //   const total_price = state.cartItems?.map(
+    //     (item) => item.quantity * item.price
+    //   );
+    //   const total_quantity = state.cartItems?.map((item) => item.quantity * 1);
+    //   state.quantity += calculateQuantity(total_quantity);
+    //   state.totalAmount += calculateAmount(total_price);
+    //   Cookies.set(STORAGE_KEY, JSON.stringify(state.cartItems));
     addToCart: (state, { payload }) => {
-      console.log(payload);
-      // const isExisted = state.cartItems.find(item=>item.id=== payload.id)
-      // if(isExisted){
-      //     return state;
-      // }else{
-      state.cartItems = [...state.cartItems, { ...payload }];
-      // }
-      const total_price = state.cartItems?.map(
-        (item) => item.quantity * item.price
-      );
-      const total_quantity = state.cartItems?.map((item) => item.quantity * 1);
-      state.quantity += calculateQuantity(total_quantity);
-      state.totalAmount += calculateAmount(total_price);
+      const existingItem = state.cartItems.find(item => item.id === payload.id);
+      if (existingItem) {
+        // If item already exists in the cart, update its quantity
+        existingItem.quantity += 1;
+      } else {
+        // If item is not in the cart, add it
+        state.cartItems.push({ ...payload, quantity: 1 });
+      }
+      
+      // Recalculate total quantity and total amount
+      state.quantity = calculateQuantity(state.cartItems);
+      state.totalAmount = calculateAmount(state.cartItems);
+      
+      // Update cookies
       Cookies.set(STORAGE_KEY, JSON.stringify(state.cartItems));
     },
+    
+  
     removeFromCart: (state, { payload }) => {
       state.cartItems = state.cartItems.filter((item) => item.id != payload.id);
       const total_price = state.cartItems?.map(
@@ -170,8 +189,8 @@ export const cartSlice = createSlice({
         return item; // return the unchanged item if the id doesn't match
       });
 
-      state.quantity += calculateQuantity(state.cartItems);
-      state.totalAmount += calculateAmount(state.cartItems);
+      state.quantity = calculateQuantity(state.cartItems);
+      state.totalAmount = calculateAmount(state.cartItems);
 
       Cookies.set(STORAGE_KEY, JSON.stringify(state.cartItems));
     },

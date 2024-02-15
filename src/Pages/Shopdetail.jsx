@@ -606,9 +606,16 @@ const Shopdetail = () => {
         <p className="mt-5  font-semibold text-black text-[10px]">
           <span className="text-[20px]  font-bold">
             <span className="text-[18px] text-black font-bold">Baht | </span>
-            {prosize[0].selling_price }
+            {product[0].selling_price - product[0].discount}
           </span>
         </p>
+        <p className="mt-3  font-light text-black text-[10px]">
+         <span className="text-[18px]  font-light">
+           <span className="text-[18px] text-black font-light line-through">baht  {prosize[0].selling_price}  </span>
+          <span className='mx-1'>-</span> <span className='font-bold text-[15px]'>{prosize[0].discount }</span>  baht (discount)
+         </span>
+         
+       </p>
       </div>
       <div className="">
         <p className="mt-5  font-semibold text-black text-[10px]">
@@ -627,6 +634,7 @@ const Shopdetail = () => {
     </>
     : 
      product && product.length !== 0 ? 
+     
      <>
      <h1 className="font-extrabold text-[30px] uppercase ">
      {product[0].item_name}
@@ -636,8 +644,16 @@ const Shopdetail = () => {
        <p className="mt-5  font-semibold text-black text-[10px]">
          <span className="text-[20px]  font-bold">
            <span className="text-[18px] text-black font-bold">Baht | </span>
-           {product[0].selling_price }
+           {product[0].selling_price - product[0].discount}
+                    </span>
+         
+       </p>
+       <p className="mt-3  font-light text-black text-[10px]">
+         <span className="text-[18px]  font-light">
+           <span className="text-[18px] text-black font-light line-through">baht  {product[0].selling_price}  </span>
+          <span className='mx-1'>-</span> <span className='font-bold text-[15px]'>{product[0].discount }</span> baht (discount)
          </span>
+         
        </p>
      </div>
      <div className="">
