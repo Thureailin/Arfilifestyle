@@ -95,13 +95,26 @@ const   OrderList = () => {
               </div>
             
          </div>
+         
          </div>
+         <div className="container text-center mt-5">
+  {details.screenshot !== null ? (
+    <>
+      <h1 className="text-cus-primary text-[20px] mt-5 mb-2">Payment ScreenShot</h1>
+
+    <img src={details.screenshot} className="w-[300px] mx-[500px] h-[200px]" alt="Payment Screenshot" />
+    </>
+  ) : (
+    
+    <p className=" text-red-500 text-xl">No payment screenshot available</p>
+  )}
+</div>
     </div>
    
    
     </div>
     
-
+     
    
     <div className="mt-5  sm:block md:block lg:block xl:block 2xl:block">
     <div className="flex justify-center items-center before:">

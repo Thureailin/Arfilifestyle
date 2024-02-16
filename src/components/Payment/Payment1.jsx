@@ -54,12 +54,17 @@ const Payment1 = () => {
   const dispatch = useDispatch();
 
   const handleImage = (e) => {
-    // console.log(e.target.files,'image')
-    if (e.target.files) {
-      setImage(e.target.files[0]);
-      setFormData((prev) => ({ ...prev, screenshot: e.target.files[0] }));
-      console.log(e.target.files[0], "image");
-    }
+    const file = e.target.files[0];
+  //  setPhoto(file);
+  
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        screenshot: reader.result ,
+      }));    }
+    
   };
 
   const handleStatus = () => {
@@ -313,6 +318,7 @@ const Payment1 = () => {
             <p className="text-red-500 text-xs italic">
               Please fill out this field.
             </p>
+    
           </div>
           <div className="w-full md:w-1/2 px-3">
             <label className="text-cus-primary font-bold">Phone</label>
@@ -462,10 +468,12 @@ const Payment1 = () => {
               className="appearance-none block w-[185px] h-[50px] bg-gray-200 text-gray-700  border border-red-500  rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-last-name"
               type="file"
+              required
               // value={formData.screenshot}
               name="screenshot"
               placeholder=""
               onChange={handleImage}
+              accept=".jpeg, .png, .jpg"
             />
           </div>
         </div>
